@@ -1,0 +1,76 @@
+# Okay so here is what I think about the requirements
+Companies can have multiple warehouses, which makes sense because small businesses can store stock in different locations.
+Products can exist in more than one warehouse and can have different quantities in each. For example, Product A could have 10 units in Warehouse 1 and 15 units in Warehouse 2.
+We need to track inventory changes, so we know when stock goes up or down.
+Suppliers provide products to companies, which is how products come into the system.
+Some products might be bundles — like a combo pack of products. For example, a “Birthday Combo” could contain 1 Cake + 2 Candles + 1 Greeting Card.
+
+# Some questions I would ask the team
+For companies do we only need the name or also address and contact info?
+For warehouses do we need manager name location, or capacity info?
+For inventory should we track full history or just current quantity?
+Can multiple suppliers provide the same product? Can a supplier provide multiple products?
+Can bundles contain other bundles or only single products?
+Are quantities always integers or can they be decimals (like kg, liters)?
+
+
+#
+# Companies
+Stores info about the company.
+Columns: company ID, name, maybe address/email.
+Example: “ABC Ltd” with two warehouses in Pune and Mumbai.
+
+# Warehouses
+Each warehouse belongs to a company.
+Columns: warehouse ID, company ID (link to company), name, location.
+Example: Warehouse 1 = “Pune Main,” Warehouse 2 = “Mumbai Branch.”
+
+# Products
+Stores info about products.
+Columns: product ID, SKU (unique), name, price, isBundle (true/false).
+Example: SKU = “C123,” Name = “Chocolate Cake,” Price = 500, isBundle = false.
+# Inventory
+Tracks how many units of a product are in each warehouse.
+Columns: inventory ID, product ID, warehouse ID, quantity.
+Example: Chocolate Cake → Warehouse Pune = 10, Warehouse Mumbai = 15.
+
+# Inventory Changes
+Tracks history of stock updates.
+Columns: change ID, inventory ID, old quantity, new quantity, timestamp, reason.
+Example: Sold 2 cakes in Pune, old = 10, new = 8, reason = “sale.”
+
+# Suppliers
+Stores supplier info.
+Columns: supplier ID, name, email, phone.
+Example: “Sweet Supplier Pvt Ltd,” phone = 9999999999.
+
+# SupplierProducts
+Maps which suppliers provide which products.
+Columns: supplier ID, product ID.
+Example: Sweet Supplier → Chocolate Cake, Birthday Combo.
+
+# ProductBundles
+Tracks what products are inside a bundle.
+Columns: bundle product ID, component product ID, quantity.
+Example: Birthday Combo → Cake x1, Candles x2, Card x1.
+Why I designed it this way
+I put warehouse info in Inventory, not Product, because a product can be in multiple warehouses.
+I made a separate Inventory Changes table so we can track history — helpful if someone messes up stock.
+I kept bundles separate so we don’t duplicate product info and it’s easy to manage combo products.
+Unique SKU → prevents duplicate products.
+Clear relationships → makes it easier to explain and debug.
+
+# Why I designed it this way
+I put warehouse info in Inventory, not Product, because a product can be in multiple warehouses.
+I made a separate Inventory Changes table so we can track history — helpful if someone messes up stock.
+I kept bundles separate so we don’t duplicate product info and it’s easy to manage combo products.
+Unique SKU → prevents duplicate products.
+Clear relationships → makes it easier to explain and debug.
+
+# Example will help me explain better
+ABC Ltd has 2 warehouses: Pune (WH1) and Mumbai (WH2).
+Product: Chocolate Cake (SKU C123), Price = 500.
+Inventory: 10 in Pune, 15 in Mumbai.
+Supplier: Sweet Supplier provides Chocolate Cake.
+Bundle: Birthday Combo = 1 Cake + 2 Candles + 1 Card.
+Inventory change: Sold 3 cakes in Mumbai → old = 15, new = 12, reason = sale.
